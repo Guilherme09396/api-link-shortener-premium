@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest run",
     "eslint": "eslint src --ext .ts --fix",
     "start": "tsx server.ts"
   },
@@ -18,12 +18,15 @@
     "eslint": "8.57.1",
     "prisma": "6.10.1",
     "tsx": "4.20.3",
-    "typescript": "5.8.3"
+    "typescript": "5.8.3",
+    "vitest": "3.2.4",
+    "vitest-tsconfig-paths": "3.4.1"
   },
   "dependencies": {
     "@prisma/client": "6.10.1",
     "dotenv": "17.0.0",
     "express": "5.1.0",
+    "nanoid": "5.1.5",
     "zod": "3.25.67"
   }
 }
