@@ -3,12 +3,11 @@ import { Links } from 'generated/prisma'
 import { nanoid } from 'nanoid'
 
 interface CreateShortenedLinkRequest {
-  id?: string
   url: string
-  customSlug?: string
-  expireAt?: string
-  password?: string
-  private?: boolean
+  customSlug: string | null
+  expireAt: Date | null
+  password: string | null
+  private: boolean | null
 }
 interface CreateShortenedLinkResponse {
   link: Links
@@ -21,10 +20,6 @@ export class CreateShortenedLink {
     data: CreateShortenedLinkRequest,
   ): Promise<CreateShortenedLinkResponse> {
     if (!data.customSlug) data.customSlug = nanoid(6)
-    if (!data.private) {
-      data.private = false
-      data.password = ''
-    }
 
     const link = await this.linkRepository.create(data)
     return { link }
