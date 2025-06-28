@@ -17,7 +17,7 @@ datasource db {
 model Links {
   id         String    @id @default(uuid())
   url        String
-  customSlug String?
+  customSlug String?   @unique
   expireAt   DateTime?
   password   String?
   private    Boolean?
