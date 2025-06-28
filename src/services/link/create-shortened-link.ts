@@ -10,6 +10,7 @@ interface CreateShortenedLinkRequest {
   expireAt?: string | Date | null
   password?: string | null
   private?: boolean | null
+  user_id?: string | null
 }
 interface CreateShortenedLinkResponse {
   link: Links

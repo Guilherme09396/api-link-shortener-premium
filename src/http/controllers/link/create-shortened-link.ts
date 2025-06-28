@@ -1,8 +1,6 @@
 import { env } from '@/env'
-import {
-  createShortenedLinkSchema,
-  createShortenedLinkSchemaLogged,
-} from '@/repositories/schemas/create-shortened-link-schema'
+import { createShortenedLinkSchema } from '@/repositories/schemas/create-shortened-link-schema'
+import { createShortenedLinkSchemaLogged } from '@/repositories/schemas/create-shortened-link-schema-logged'
 import { AlreadySlugExistError } from '@/services/errors/already-slug-exist-error'
 import { LinkPasswordIsRequiredError } from '@/services/errors/link-password-is-required-error'
 import { makeCreateShortenedLinkService } from '@/services/factories/make-create-shortened-link-service'
@@ -21,9 +19,10 @@ export async function createShortenedLink(req: Request, res: Response) {
     if (data.private && !data.password) {
       throw new LinkPasswordIsRequiredError()
     }
+    const linkSave = { ...data, user_id: req.userId }
 
     const createShortenedLinkService = makeCreateShortenedLinkService()
-    const { link } = await createShortenedLinkService.execute(data)
+    const { link } = await createShortenedLinkService.execute(linkSave)
     const shortUrl = `${env.BASE_URL}/${link.customSlug}`
     res.status(201).json({ shortUrl })
   } catch (e) {

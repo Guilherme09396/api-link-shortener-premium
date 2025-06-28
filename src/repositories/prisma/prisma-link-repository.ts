@@ -10,7 +10,7 @@ export class PrismaLinkRepository implements LinkRepository {
     return link
   }
 
-  async create(data: Prisma.LinksCreateInput): Promise<Links> {
+  async create(data: Prisma.LinksUncheckedCreateInput): Promise<Links> {
     const link = await prisma.links.create({
       data,
     })
