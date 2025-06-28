@@ -21,8 +21,8 @@ model Links {
   expireAt   DateTime?
   password   String?
   private    Boolean?
-  user       Users     @relation(fields: [user_id], references: [id])
-  user_id    String
+  user       Users?    @relation(fields: [user_id], references: [id])
+  user_id    String?
 
   @@map("links")
 }
