@@ -5,6 +5,8 @@ declare global {
   namespace Express {
     interface Request {
       numberAccess?: number
+      userLogged?: boolean
+      userId?: string
     }
   }
 }

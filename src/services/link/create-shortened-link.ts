@@ -6,10 +6,10 @@ import dayjs from 'dayjs'
 
 interface CreateShortenedLinkRequest {
   url: string
-  customSlug: string | null
-  expireAt: string | Date | null
-  password: string | null
-  private: boolean | null
+  customSlug?: string | null
+  expireAt?: string | Date | null
+  password?: string | null
+  private?: boolean | null
 }
 interface CreateShortenedLinkResponse {
   link: Links

@@ -5,7 +5,10 @@ import {
   blocksLinkCreationPerDay,
   blocksLinkCreationPerMinute,
 } from '@/middlewares/verify-client-access-by-ip'
+import { verifyUserLogged } from '@/middlewares/verify-user-logged'
 const router = express.Router()
+
+router.use(verifyUserLogged)
 
 router.post('/', createShortenedLink)
 router.get(
