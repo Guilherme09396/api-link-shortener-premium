@@ -3,6 +3,7 @@ import { Links } from 'generated/prisma'
 import { nanoid } from 'nanoid'
 import { AlreadySlugExistError } from '../errors/already-slug-exist-error'
 import dayjs from 'dayjs'
+import { hash } from 'bcryptjs'
 
 interface CreateShortenedLinkRequest {
   url: string
@@ -24,6 +25,10 @@ export class CreateShortenedLink {
   ): Promise<CreateShortenedLinkResponse> {
     if (!data.customSlug) data.customSlug = nanoid(6)
     if (data.expireAt) data.expireAt = dayjs(data.expireAt).toDate()
+
+    if (data.private && data.password) {
+      data.password = await hash(data.password, 6)
+    }
 
     const slugExist = await this.linkRepository.findBySlug(data.customSlug)
     if (slugExist) {
