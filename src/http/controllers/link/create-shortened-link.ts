@@ -4,16 +4,12 @@ import { createShortenedLinkSchemaLogged } from '@/repositories/schemas/create-s
 import { AlreadySlugExistError } from '@/services/errors/already-slug-exist-error'
 import { LinkPasswordIsRequiredError } from '@/services/errors/link-password-is-required-error'
 import { makeCreateShortenedLinkService } from '@/services/factories/make-create-shortened-link-service'
+import { createLinkSchema } from '@/utils/link/create-shortened-link-util'
 import { Request, Response } from 'express'
 
 export async function createShortenedLink(req: Request, res: Response) {
   try {
-    let schema
-    if (!req.userId) {
-      schema = createShortenedLinkSchema
-    } else {
-      schema = createShortenedLinkSchemaLogged
-    }
+    const schema = createLinkSchema(req.userId)
     const data = schema.parse(req.body)
 
     if (data.private && !data.password) {
