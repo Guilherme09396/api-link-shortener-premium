@@ -1,6 +1,8 @@
 import { LinkRepository } from '@/repositories/link-repository'
 import { Links } from 'generated/prisma'
 import { ResourceNotFoundError } from '../errors/resource-not-found-error'
+import dayjs from 'dayjs'
+import { LinkHasExpiredError } from '../errors/link-has-expired-error'
 
 interface FindLinkBySlugRequest {
   slug: string
@@ -19,6 +21,12 @@ export class FindLinkBySlug {
     if (!link) {
       throw new ResourceNotFoundError()
     }
+    const linkHasExpired = dayjs().isAfter(dayjs(link.expireAt))
+
+    if (linkHasExpired) {
+      throw new LinkHasExpiredError()
+    }
+
     return { link }
   }
 }

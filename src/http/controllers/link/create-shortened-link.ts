@@ -9,7 +9,7 @@ export async function createShortenedLink(req: Request, res: Response) {
     const createShortenedLinkSchema = z.object({
       url: z.string(),
       customSlug: z.string().nullish().default(null),
-      expireAt: z.date().nullish().default(null),
+      expireAt: z.string().nullish().default(null),
       password: z.string().nullish().default(null),
       private: z.boolean().nullish().default(null),
     })

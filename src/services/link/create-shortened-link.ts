@@ -2,11 +2,12 @@ import { LinkRepository } from '@/repositories/link-repository'
 import { Links } from 'generated/prisma'
 import { nanoid } from 'nanoid'
 import { AlreadySlugExistError } from '../errors/already-slug-exist-error'
+import dayjs from 'dayjs'
 
 interface CreateShortenedLinkRequest {
   url: string
   customSlug: string | null
-  expireAt: Date | null
+  expireAt: string | Date | null
   password: string | null
   private: boolean | null
 }
@@ -21,6 +22,7 @@ export class CreateShortenedLink {
     data: CreateShortenedLinkRequest,
   ): Promise<CreateShortenedLinkResponse> {
     if (!data.customSlug) data.customSlug = nanoid(6)
+    if (data.expireAt) data.expireAt = dayjs(data.expireAt).toDate()
 
     const slugExist = await this.linkRepository.findBySlug(data.customSlug)
     if (slugExist) {
