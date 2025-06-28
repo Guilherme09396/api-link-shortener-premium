@@ -21,6 +21,19 @@ model Links {
   expireAt   DateTime?
   password   String?
   private    Boolean?
+  user       Users     @relation(fields: [user_id], references: [id])
+  user_id    String
 
   @@map("links")
+}
+
+model Users {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password_hash String
+  created_at    DateTime @default(now())
+  Links         Links[]
+
+  @@map("users")
 }
