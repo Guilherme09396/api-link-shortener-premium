@@ -10,12 +10,12 @@ const router = express.Router()
 
 router.use(verifyUserLogged)
 
-router.post('/', createShortenedLink)
-router.get(
-  '/:slug',
+router.post(
+  '/',
   blocksLinkCreationPerMinute,
   blocksLinkCreationPerDay,
-  findByLinkBySlug,
+  createShortenedLink,
 )
+router.get('/:slug', findByLinkBySlug)
 
 export default router
