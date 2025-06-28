@@ -11,6 +11,7 @@ export async function findByLinkBySlug(req: Request, res: Response) {
 
     const { slug } = createShortenedLinkSchema.parse(req.params)
     const createShortenedLinkService = makeFindByLinkSlugService()
+
     const { link } = await createShortenedLinkService.execute({ slug })
     res.status(200).redirect(link.url)
   } catch (e) {

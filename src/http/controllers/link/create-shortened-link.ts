@@ -21,7 +21,7 @@ export async function createShortenedLink(req: Request, res: Response) {
     res.status(201).json({ shortUrl })
   } catch (e) {
     if (e instanceof AlreadySlugExistError) {
-      res.status(403).json({ error: e.message })
+      res.status(409).json({ error: e.message })
     } else {
       throw e
     }

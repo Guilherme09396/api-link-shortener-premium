@@ -7,3 +7,7 @@ services:
       - POSTGRESQL_DATABASE=apishortener
       - POSTGRESQL_USERNAME=docker
       - POSTGRESQL_PASSWORD=docker
+  redis: 
+    image: redis
+    ports:
+      - 6379:6379
