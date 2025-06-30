@@ -13,7 +13,7 @@ app.use(cors())
 
 app.use(express.json())
 app.use(linkRoutes)
-app.use('/user', userRoutes)
+app.use('/auth', userRoutes)
 app.use('/stats', statsRouter)
 
 app.use(errorHandler)

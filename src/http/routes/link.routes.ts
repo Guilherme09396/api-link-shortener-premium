@@ -12,7 +12,8 @@ const router = express.Router()
 router.use(verifyUserLogged)
 
 router.post(
-  '/',
+  '/shorten',
+  getIpClient,
   blocksLinkCreationPerMinute,
   blocksLinkCreationPerDay,
   createShortenedLink,
