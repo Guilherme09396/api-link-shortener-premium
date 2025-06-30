@@ -10,7 +10,6 @@ export async function blocksLinkCreationPerMinute(
   const ipClient = req.ipClient
   const valueAccess = Number(await redis.get(`${ipClient}-minute`)) || 0
   const nextValue = valueAccess + 1
-  console.log(await redis.get(`${ipClient}-minute`));
 
   if (nextValue > 3) {
     res.status(429).json({ errors: 'Limit per minute exceeded' })
