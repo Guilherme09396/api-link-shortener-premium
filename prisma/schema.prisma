@@ -23,6 +23,7 @@ model Links {
   private    Boolean?
   user       Users?    @relation(fields: [user_id], references: [id])
   user_id    String?
+  Clicks     Clicks[]
 
   @@map("links")
 }
@@ -36,4 +37,17 @@ model Users {
   Links         Links[]
 
   @@map("users")
+}
+
+model Clicks {
+  id             String   @id @default(uuid())
+  ip             String?
+  user_agent     String?
+  date_of_access DateTime @default(now())
+  lon            Int?
+  lat            Int?
+  link           Links    @relation(fields: [link_id], references: [id])
+  link_id        String
+
+  @@map("clicks_in_link")
 }

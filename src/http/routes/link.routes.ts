@@ -6,6 +6,7 @@ import {
 import { verifyUserLogged } from '@/middlewares/verify-user-logged'
 import { createShortenedLink } from '../controllers/link/create-shortened-link'
 import { findByLinkBySlug } from '../controllers/link/find-by-link-by-slug'
+import { getIpClient } from '@/middlewares/get-ip-client'
 const router = express.Router()
 
 router.use(verifyUserLogged)
@@ -16,6 +17,6 @@ router.post(
   blocksLinkCreationPerDay,
   createShortenedLink,
 )
-router.get('/:slug', findByLinkBySlug)
+router.get('/:slug', getIpClient, findByLinkBySlug)
 
 export default router

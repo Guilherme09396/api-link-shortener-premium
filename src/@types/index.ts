@@ -7,6 +7,7 @@ declare global {
       numberAccess?: number
       userLogged?: boolean
       userId?: string
+      ipClient?: string
     }
   }
 }
