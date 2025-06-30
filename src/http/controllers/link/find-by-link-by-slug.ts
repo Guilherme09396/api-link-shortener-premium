@@ -23,7 +23,6 @@ export async function findByLinkBySlug(req: Request, res: Response) {
 
     if (linkInCache) {
       const linkObject: { url: string; id: string } = JSON.parse(linkInCache)
-      console.log(linkObject)
       res.status(200).redirect(linkObject.url)
       createClickService.execute({ ip, userAgent, linkId: linkObject.id })
       return
