@@ -3,6 +3,19 @@ import { LinkRepository } from '../link-repository'
 import { prisma } from '@/lib/prisma'
 
 export class PrismaLinkRepository implements LinkRepository {
+  async findById(id: string): Promise<Links | null> {
+    const link = await prisma.links.findFirst({
+      where: {id}
+    })
+    return link
+  }
+  deleteById(id: string): Promise<Links> {
+    const linkDeletado = prisma.links.delete({
+      where: {id}
+    })
+
+    return linkDeletado
+  }
   async findByUser(userId: string): Promise<Prisma.LinksUncheckedUpdateInput[]> {
     const links = await prisma.links.findMany({
       where: {user_id: userId},

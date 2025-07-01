@@ -3,7 +3,7 @@ import { LinkHasExpiredError } from '@/services/errors/link-has-expired-error'
 import { ResourceNotFoundError } from '@/services/errors/resource-not-found-error'
 import { makeCreateClickService } from '@/services/factories/make-create-create-click-service'
 import { makeFindByLinkSlugService } from '@/services/factories/make-find-link-by-slug-link-service'
-import { getCacheLink, setCacheLink } from '@/utils/link/cache-link-util'
+import { getCache, setCache, } from '@/utils/cache-util'
 import { Request, Response } from 'express'
 import { z } from 'zod'
 
@@ -17,7 +17,7 @@ export async function findByLinkBySlug(req: Request, res: Response) {
     const passwordLink = req.header('password-link')
     const createClickService = makeCreateClickService()
     const finByLinkBySlugService = makeFindByLinkSlugService()
-    const linkInCache = await getCacheLink(slug)
+    const linkInCache = await getCache(slug)
     const ip = req.ipClient
     const userAgent = req.headers['user-agent']
 
@@ -38,7 +38,7 @@ export async function findByLinkBySlug(req: Request, res: Response) {
       linkId: link.id,
     })
 
-    await setCacheLink(slug, JSON.stringify(link))
+    await setCache(slug, JSON.stringify(link), 60)
 
     setTimeout(() => {
       res.status(200).redirect(link.url)

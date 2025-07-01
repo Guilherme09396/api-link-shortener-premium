@@ -12,8 +12,8 @@ export const app = express()
 app.use(cors())
 
 app.use(express.json())
-app.use(linkRoutes)
 app.use('/auth', userRoutes)
+app.use(linkRoutes)
 app.use('/stats', statsRouter)
 
 app.use(errorHandler)
