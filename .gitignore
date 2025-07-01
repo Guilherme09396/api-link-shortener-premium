@@ -3,5 +3,3 @@ node_modules
 *.test.ts
 .env
 generated/prisma
-src/http/controllers/link/delete-link.ts
-src/services/link/delete-link-by-id-service.ts
