@@ -11,7 +11,7 @@ export function errorHandler(
   next: NextFunction,
 ) {
   if (err instanceof ZodError) {
-    res.status(403).json({ error: 'Invalid format', issues: err.format() })
+    res.status(400).json({ error: 'Invalid format', issues: err.format() })
   } else {
     res.status(500).json({
       error: 'Erro interno do servidor',

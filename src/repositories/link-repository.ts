@@ -6,4 +6,5 @@ export interface LinkRepository {
   findById(id: string): Promise<Links | null>
   findByUser(userId: string): Promise<Prisma.LinksUncheckedUpdateInput[]>
   deleteById(id: string): Promise<Links>
+  checkLinkPrivate(slug: string): Promise<boolean>
 }

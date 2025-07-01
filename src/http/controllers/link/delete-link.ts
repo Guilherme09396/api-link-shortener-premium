@@ -6,7 +6,7 @@ import { z } from 'zod'
 export async function deleteLink(req: Request, res: Response) {
   try {
     const deleteLinkSchema = z.object({
-      id: z.string(),
+      id: z.string().uuid(),
     })
 
     const {id} = deleteLinkSchema.parse(req.params)

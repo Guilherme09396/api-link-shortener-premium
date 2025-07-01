@@ -11,7 +11,7 @@ export async function loginUser(req: Request, res: Response) {
     res.status(200).json({ token })
   } catch (e) {
     if (e instanceof CredentialsInvalidError) {
-      res.status(400).json({ error: e.message })
+      res.status(401).json({ error: e.message })
     } else {
       throw e
     }

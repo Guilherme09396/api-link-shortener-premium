@@ -9,6 +9,7 @@ import { findByLinkBySlug } from '../controllers/link/find-by-link-by-slug'
 import { getIpClient } from '@/middlewares/get-ip-client'
 import { findLinkByUser } from '../controllers/link/find-link-by-user'
 import { deleteLink } from '../controllers/link/delete-link'
+import { checkLinkPrivate } from '../controllers/link/check-link-private'
 const router = express.Router()
 
 router.use(verifyUserLogged)
@@ -21,7 +22,7 @@ router.post(
   createShortenedLink,
 )
 router.get('/:slug', getIpClient, findByLinkBySlug)
-
+router.get("/check/:slug", checkLinkPrivate)
 router.use(restrictedAccessLoggedInUser)
 router.get("/shorten/user", findLinkByUser)
 router.delete("/shorten/:id", deleteLink)

@@ -12,7 +12,7 @@ export async function blocksLinkCreationPerMinute(
   const nextValue = valueAccess + 1
 
   if (nextValue > 3) {
-    res.status(429).json({ errors: 'Limit per minute exceeded' })
+    res.status(429).json({ error: 'Limit per minute exceeded' })
     return
   }
 
@@ -33,7 +33,7 @@ export async function blocksLinkCreationPerDay(
   const nextValue = valueAccess + 1
 
   if (nextValue > 30) {
-    res.status(429).json({ errors: 'Limit per 24 hours exceeded' })
+    res.status(429).json({ error: 'Limit per 24 hours exceeded' })
     return
   }
 

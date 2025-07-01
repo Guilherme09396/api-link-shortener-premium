@@ -31,7 +31,7 @@ export async function restrictedAccessLoggedInUser(
     if (userId) {
       next()
     } else {
-      res.status(400).json({ error: 'Access restrict' })
+      res.status(401).json({ error: 'Access restrict' })
     }
   } catch (e) {}
 }

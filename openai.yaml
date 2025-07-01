@@ -1,0 +1,409 @@
+openapi: 3.0.3
+info:
+  title: API Link Shortener premium
+  description: API para criação, consulta e atualização de pagamentos.
+  version: 1.0.0
+
+servers:
+- url: http://localhost:3333/
+  description: Servidor local
+
+paths:
+  /auth/register:
+    post:
+      summary: Cria um novo usuário
+      tags: [ Auth ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+      responses:
+        '201':
+          description: Usuário criado.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/user'
+        '400':
+          description: Erro na validação do schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidFormatError'
+        '409':
+          description: Usuário já cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alreadyExistUserError'
+        '500':
+          description: Erro interno no servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalError'
+  /auth/login:
+    post:
+      summary: Faz login
+      tags: [ Auth ]
+      responses:
+        '200':
+          description: Login realizado com sucesso, token criado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/token'
+        '401':
+          description: Credenciais inválidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/credentialsInvalidError'
+        '400':
+          description: Erro na validação do schema
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidFormatError'
+        '500':
+          description: Erro interno no servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalError'
+
+  /shorten/:
+    post:
+      summary: Criar link encurtado, pode criar logado ou não (campo private e password só quando logado)
+      tags: [ Links ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createLink'
+      responses:
+        '201':
+          description: Cobranças retornadas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/shortUrl'
+        '400':
+          description: Erro na validação do schema ou caso a opção seja privado e a senha não for informada, terá erro de campo faltando (password)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidFormatError'
+        '409':
+          description: Slug informado já existente
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/alreadyExistSlugError'
+        '429':
+          description: Erro por limite excedido (por minuto - 3 requisições, por 24 hrs - 30 requisições)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/limiteExceededError'
+        '500':
+          description: Erro interno no servidor
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/internalError'
+
+  /{slug}:
+    get:
+      summary: Redireciona para a url informada
+      tags: [ Links ]
+      parameters:
+      - name: slug
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: password-link
+        in: header
+        required: false
+        description: "Obrigatório em caso de link privado"
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Redireciona para o link
+
+        '404':
+          description: Slug não encontrado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/resourceNotFoundError"
+        '410':
+          description: Em caso de link expirado (caso tenha expiração, informado na criação do link)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/linkExpiredError"
+        '401':
+          description: Caso o link seja privado e a senha não tenha sido enviado ou esteja incorreta
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/credentialsInvalidError"
+        '400':
+          description: Erro na validação do schema
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/invalidFormatError"
+        '500':
+          description: Erro interno no servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internalError"
+
+  /shorten/user:
+    get:
+      summary: Lista todos os links de um usuário logado
+      tags: [ Links ]
+      security:
+      - bearerAuth: []
+
+      responses:
+        '200':
+          description: Lista todos os links do usuário logado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/link"
+        '401':
+          description: Acesso restrito (em caso de não estar logado)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/accessRestrictError"
+        '500':
+          description: Erro interno no servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internalError"
+
+  /shorten/{id}:
+    delete:
+      summary: Remove um link
+      tags: [ Links ]
+      security:
+      - bearerAuth: []
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Sucesso ao remover link
+
+        '400':
+          description: Erro na validação do schema
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/invalidFormatError"
+        '401':
+          description: Acesso restrito (em caso de não estar logado)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/accessRestrictError"
+        '404':
+          description: Caso o link não exista
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/resourceNotFoundError"
+        '500':
+          description: Erro interno no servidor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/internalError"
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # opcional, apenas informativo
+  schemas:
+    createUser:
+      type: object
+      required: [ name, email, password_hash ]
+      properties:
+        name:
+          type: string
+          example: "string"
+        email:
+          type: string
+          format: email
+        password_hash:
+          type: string
+          example: "string"
+
+    user:
+      type: object
+      required: [ id, name, email, password_hash, created_at ]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: "string"
+        email:
+          type: string
+          format: email
+        password_hash:
+          type: string
+          example: "string"
+        created_at:
+          type: string
+          format: date-time
+
+    createLink:
+      type: object
+      required: [ url ]
+      properties:
+        url:
+          type: string
+          format: url
+        customSlug:
+          type: string
+          example: "abc"
+        expireAt:
+          type: string
+          format: date-time
+        private:
+          type: boolean
+          example: true
+          description: "Opção presente só quando logado"
+        password:
+          type: string
+          example: "string"
+          description: "Opção presente só quando logado"
+
+    link:
+      type: object
+      required: [ id, url, customSlug, expireAt ]
+      properties:
+        id:
+          type: string
+          format: uuid
+        url:
+          type: string
+          example: "string"
+        customSlug:
+          type: string
+          example: "abc"
+        expireAt:
+          type: string
+          format: date-time
+
+    shortUrl:
+      type: object
+      required: [ url ]
+      properties:
+        shortUrl:
+          type: string
+          format: url
+
+    internalError:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: "Erro interno"
+
+    resourceNotFoundError:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: "Resource Not Found"
+
+    linkExpiredError:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: "Link has expired."
+
+    invalidFormatError:
+      type: object
+      properties:
+        errors:
+          type: string
+          example: "Invalid format"
+        issues:
+          type: object
+          properties:
+            _errors:
+              type: array
+              example: []
+            chaveErro:
+              type: object
+              properties:
+                _errors:
+                  type: array
+                  example: [ "Expected number, received string" ]
+
+    alreadyExistUserError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Already user exist."
+    alreadyExistSlugError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Already slug exist."
+    limiteExceededError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Limit per minute exceeded"
+    credentialsInvalidError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Credentials invalid."
+    accessRestrictError:
+      type: object
+      properties:
+        error:
+          type: string
+          example: "Access restrict"
+    token:
+      type: object
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiJ9.ZjI4MzA0MTktZGNlZi00Zjg1LTg0MzYtNTk4Yjk2ZDU4YmYy.61WDwW8yrMiUHvOwszq49jXd6lZJV7q3ngdzpkyemak"
