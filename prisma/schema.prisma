@@ -46,6 +46,7 @@ model Clicks {
   date_of_access DateTime @default(now())
   lon            Int?
   lat            Int?
+  location       String?
   link           Links    @relation(fields: [link_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   link_id        String
 

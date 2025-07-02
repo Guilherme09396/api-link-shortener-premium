@@ -25,6 +25,7 @@ interface CreateClickRequest {
   dateOfAccess?: string
   lon?: number
   lat?: number
+  location?: string
   linkId: string
 }
 
@@ -40,6 +41,7 @@ export class CreateClick {
     dateOfAccess,
     lon,
     lat,
+    location,
     userAgent,
     linkId,
   }: CreateClickRequest): Promise<CreateClickResponse> {
@@ -49,6 +51,7 @@ export class CreateClick {
       if (!data.status) {
         lon = data.lon
         lat = data.lat
+        location = `${data.regionName}/${data.region} - ${data.country}`
       }
     }
 
@@ -57,6 +60,7 @@ export class CreateClick {
       user_agent: userAgent,
       lat,
       lon,
+      location,
       date_of_access: dateOfAccess,
       link_id: linkId,
     })
