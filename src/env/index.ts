@@ -7,6 +7,7 @@ const envSchema = z.object({
   DATABASE_URL: z.string(),
   BASE_URL: z.string(),
   JWT_SECRET: z.string(),
+  URL_REDIS: z.string()
 })
 
 const _env = envSchema.safeParse(process.env)
