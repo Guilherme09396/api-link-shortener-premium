@@ -20,7 +20,6 @@ export async function findByLinkBySlug(req: Request, res: Response) {
     const linkInCache = await getCache(slug)
     const ip = req.ipClient
     const userAgent = req.headers['user-agent']
-
     if (linkInCache) {
       const linkObject: { url: string; id: string } = JSON.parse(linkInCache)
       res.status(200).redirect(linkObject.url)
