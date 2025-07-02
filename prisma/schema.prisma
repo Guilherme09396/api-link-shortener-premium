@@ -44,8 +44,8 @@ model Clicks {
   ip             String?
   user_agent     String?
   date_of_access DateTime @default(now())
-  lon            Int?
-  lat            Int?
+  lon            Decimal?
+  lat            Decimal?
   location       String?
   link           Links    @relation(fields: [link_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   link_id        String
