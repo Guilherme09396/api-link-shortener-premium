@@ -220,4 +220,10 @@ Authorization: Bearer <seu_token>
 
 ## 👨‍💻 Autor
 
-[Guilherme Gomes](https://github.com/Guilherme09396)
+Guilherme Gomes
+
+Desenvolvedor Backend Júnior
+
+🔗 [LinkedIn](https://www.linkedin.com/in/guilherme-gomes-alves/)
+
+📧 guilherme09397@gmail.com
