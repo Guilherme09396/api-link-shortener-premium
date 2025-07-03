@@ -3,17 +3,17 @@ import { makeCheckLinkService } from '@/services/factories/make-check-link-print
 import { Request, Response } from 'express'
 import { z } from 'zod'
 
-export async function checkLinkPrivate(req: Request, res: Response) {
+export async function linkIsPrivate(req: Request, res: Response) {
   try {
-    const checkLinkPrivate = z.object({
+    const linkIsPrivateSchema = z.object({
       slug: z.string(),
     })
 
-    const {slug} = checkLinkPrivate.parse(req.params)
+    const {slug} = linkIsPrivateSchema.parse(req.params)
     const checkLinkService = makeCheckLinkService()
-    const {linkIsPrivate} = await checkLinkService.execute({customSlug: slug})
+    const {isPrivate} = await checkLinkService.execute({customSlug: slug})
 
-    res.status(200).json({isPrivate: linkIsPrivate})
+    res.status(200).json({isPrivate})
    
   } catch (e) {
     if (e instanceof ResourceNotFoundError) {

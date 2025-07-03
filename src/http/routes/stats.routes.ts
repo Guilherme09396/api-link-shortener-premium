@@ -1,10 +1,10 @@
 import express from 'express'
 import {
-  restrictedAccessLoggedInUser,
   verifyUserLogged,
 } from '@/middlewares/verify-user-logged'
 import { getIpClient } from '@/middlewares/get-ip-client'
 import { getStats } from '../controllers/stats/get-stats'
+import { restrictedAccessLoggedInUser } from '@/middlewares/restricted-access-logged-in-user'
 const router = express.Router()
 
 router.use(verifyUserLogged)

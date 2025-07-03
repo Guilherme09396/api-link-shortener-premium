@@ -3,7 +3,7 @@ import { LinkRepository } from '../link-repository'
 import { prisma } from '@/lib/prisma'
 
 export class PrismaLinkRepository implements LinkRepository {
-  async checkLinkPrivate(slug: string): Promise<boolean> {
+  async linkIsPrivate(slug: string): Promise<boolean> {
     const linkIsPrivate = await prisma.links.findFirst({
       where: {customSlug: slug},
       select: {private: true}

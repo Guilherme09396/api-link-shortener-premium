@@ -5,19 +5,19 @@ import dayjs from 'dayjs'
 import { LinkHasExpiredError } from '../errors/link-has-expired-error'
 
 
-interface CheckLinkPrivateRequest {
+interface LinkIsPrivateRequest {
     customSlug: string
 }
-interface CheckLinkPrivateResponse {
-    linkIsPrivate: boolean
+interface LinkIsPrivateResponse {
+    isPrivate: boolean
 }
 
-export class CheckLinkPrivate {
+export class LinkIsPrivate {
     constructor(private linkRepository: LinkRepository) { }
 
     async execute(
-        { customSlug }: CheckLinkPrivateRequest,
-    ): Promise<CheckLinkPrivateResponse> {
+        { customSlug }: LinkIsPrivateRequest,
+    ): Promise<LinkIsPrivateResponse> {
 
         let link = await this.linkRepository.findBySlug(customSlug)
         if (!link) {
@@ -30,8 +30,8 @@ export class CheckLinkPrivate {
             throw new LinkHasExpiredError()
         }
 
-        const linkIsPrivate = await this.linkRepository.checkLinkPrivate(customSlug)
+        const isPrivate = await this.linkRepository.linkIsPrivate(customSlug)
 
-        return { linkIsPrivate }
+        return { isPrivate }
     }
 }

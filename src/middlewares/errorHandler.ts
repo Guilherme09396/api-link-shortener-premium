@@ -1,4 +1,3 @@
-// middlewares/errorHandler.ts
 import { env } from '@/env'
 import { Request, Response, NextFunction } from 'express'
 import { ZodError } from 'zod'

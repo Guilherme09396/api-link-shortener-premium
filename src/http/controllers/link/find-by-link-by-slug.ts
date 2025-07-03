@@ -14,7 +14,8 @@ export async function findByLinkBySlug(req: Request, res: Response) {
     })
 
     const { slug } = findByLinkBySlugSchema.parse(req.params)
-    const passwordLink = req.headers['password-link'] || await getCache(`${slug}-slugPrivate`);
+    const passwordLink = req.headers['password-link'] as string | undefined
+    console.log(passwordLink);
     const createClickService = makeCreateClickService()
     const finByLinkBySlugService = makeFindByLinkSlugService()
     const linkInCache = await getCache(slug)
@@ -22,8 +23,8 @@ export async function findByLinkBySlug(req: Request, res: Response) {
     const userAgent = req.headers['user-agent']
     if (linkInCache) {
       const linkObject: { url: string; id: string } = JSON.parse(linkInCache)
-      res.status(200).redirect(linkObject.url)
-      createClickService.execute({ ip, userAgent, linkId: linkObject.id })
+      res.status(200).json({url: linkObject.url})
+      await createClickService.execute({ ip, userAgent, linkId: linkObject.id })
       return
     }
 
@@ -40,8 +41,8 @@ export async function findByLinkBySlug(req: Request, res: Response) {
     await setCache(slug, JSON.stringify(link), 60)
 
     setTimeout(() => {
-      res.status(200).redirect(link.url)
-    }, 4000)
+      res.status(200).json({url: link.url})
+    }, 3000) // Para simular diferença quando estiver em cache
   } catch (e) {
     if (e instanceof ResourceNotFoundError) {
       res.status(404).json({ error: e.message })
