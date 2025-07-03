@@ -1,9 +1,9 @@
 import { LinkRepository } from '@/repositories/link-repository'
 import { Links } from 'generated/prisma'
-import { nanoid } from 'nanoid'
 import { AlreadySlugExistError } from '../errors/already-slug-exist-error'
 import dayjs from 'dayjs'
 import { hash } from 'bcryptjs'
+import cuid from "cuid"
 
 interface CreateShortenedLinkRequest {
   url: string
@@ -23,7 +23,7 @@ export class CreateShortenedLink {
   async execute(
     data: CreateShortenedLinkRequest,
   ): Promise<CreateShortenedLinkResponse> {
-    if (!data.customSlug) data.customSlug = nanoid(6)
+    if (!data.customSlug) data.customSlug = cuid().slice(-6)
     if (data.expireAt) data.expireAt = dayjs(data.expireAt).toDate()
 
     if (data.private && data.password) {
