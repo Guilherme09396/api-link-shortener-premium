@@ -5,29 +5,33 @@ import { prisma } from '@/lib/prisma'
 export class PrismaLinkRepository implements LinkRepository {
   async linkIsPrivate(slug: string): Promise<boolean> {
     const linkIsPrivate = await prisma.links.findFirst({
-      where: {customSlug: slug},
-      select: {private: true}
+      where: { customSlug: slug },
+      select: { private: true }
     })
 
     return linkIsPrivate?.private === true ? true : false
   }
+
   async findById(id: string): Promise<Links | null> {
     const link = await prisma.links.findFirst({
-      where: {id}
+      where: { id }
     })
     return link
   }
-  deleteById(id: string): Promise<Links> {
-    const linkDeletado = prisma.links.delete({
-      where: {id}
+
+  async deleteById(id: string): Promise<Links> {
+    const linkDeletado = await prisma.links.delete({
+      where: { id }
     })
 
     return linkDeletado
   }
-  async findByUser(userId: string): Promise<Prisma.LinksUncheckedUpdateInput[]> {
+
+  async findByUser(userId: string): Promise<({ _count: { user: number; Clicks: number } } & { id: string; url: string; customSlug: string | null; expireAt: Date | null })[]> {
     const links = await prisma.links.findMany({
-      where: {user_id: userId},
-      omit: {private: true, user_id: true, password: true}
+      where: { user_id: userId },
+      omit: { private: true, user_id: true, password: true },
+      include: { _count: true },
     })
     return links
   }

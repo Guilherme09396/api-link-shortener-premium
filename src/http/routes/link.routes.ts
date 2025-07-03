@@ -13,7 +13,6 @@ import { blocksLinkCreationPerDay } from '@/middlewares/blocks-link-creation-per
 import { restrictedAccessLoggedInUser } from '@/middlewares/restricted-access-logged-in-user'
 const router = express.Router()
 
-router.use(verifyUserLogged)
 
 router.post(
   '/shorten',
@@ -22,8 +21,6 @@ router.post(
   blocksLinkCreationPerDay,
   createShortenedLink,
 )
-router.get('/:slug', getIpClient, findByLinkBySlug)
-router.get("/check/:slug", linkIsPrivate)
 router.use(restrictedAccessLoggedInUser)
 router.get("/shorten/user", findLinkByUser)
 router.delete("/shorten/:id", deleteLink)
