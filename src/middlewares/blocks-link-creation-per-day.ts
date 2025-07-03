@@ -10,14 +10,21 @@ export async function blocksLinkCreationPerDay(
   const ipClient = req.ipClient
   const valueAccess = Number(await redis.get(`${ipClient}-day`)) || 0
   const nextValue = valueAccess + 1
+  const exists = await redis.exists(`${ipClient}-day`);
 
   if (nextValue > 30) {
     res.status(429).json({ error: 'Limit per 24 hours exceeded' })
     return
   }
 
-  await redis.set(`${ipClient}-day`, nextValue, {
-    expiration: { type: 'EX', value: 60 * 60 * 24 },
-  })
+  if (!exists) {
+    await redis.set(`${ipClient}-day`, nextValue, {
+      expiration: { type: 'EX', value: 60 * 60 * 24 },
+    })
+  } else {
+    await redis.set(`${ipClient}-day`, nextValue, {
+      expiration: "KEEPTTL"
+    })
+  }
   next()
 }

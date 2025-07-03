@@ -10,15 +10,23 @@ export async function blocksLinkCreationPerMinute(
   const ipClient = req.ipClient
   const valueAccess = Number(await redis.get(`${ipClient}-minute`)) || 0
   const nextValue = valueAccess + 1
+  const exists = await redis.exists(`${ipClient}-minute`);
 
   if (nextValue > 3) {
     res.status(429).json({ error: 'Limit per minute exceeded' })
     return
   }
 
-  await redis.set(`${ipClient}-minute`, nextValue, {
-    expiration: { type: 'EX', value: 60 },
-  })
+  if (!exists) {
+    await redis.set(`${ipClient}-minute`, nextValue, {
+      expiration: { type: 'EX', value: 60 },
+    })
+    
+  } else {
+    await redis.set(`${ipClient}-minute`, nextValue, {
+      expiration: "KEEPTTL",
+    })
+  }
   next()
 }
 
