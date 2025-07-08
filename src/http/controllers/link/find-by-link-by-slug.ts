@@ -15,7 +15,6 @@ export async function findByLinkBySlug(req: Request, res: Response) {
 
     const { slug } = findByLinkBySlugSchema.parse(req.params)
     const passwordLink = req.headers['password-link'] as string | undefined
-    console.log(passwordLink);
     const createClickService = makeCreateClickService()
     const finByLinkBySlugService = makeFindByLinkSlugService()
     const linkInCache = await getCache(slug)

@@ -46,12 +46,12 @@ export class CreateClick {
     linkId,
   }: CreateClickRequest): Promise<CreateClickResponse> {
     if (ip) {
-      const response = await axios.get(`http://ip-api.com/json/187.57.91.155`)
+      const response = await axios.get(`http://ip-api.com/json/${ip}`)
       const data: location = response.data
       if (data.status === "success") {
         lon = data.lon
         lat = data.lat
-        location = `${data.regionName}/${data.region} - ${data.country}`
+        location = `${data.city}/${data.region} - ${data.country}`
       }
     }
 
