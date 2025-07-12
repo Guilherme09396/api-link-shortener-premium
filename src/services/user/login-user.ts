@@ -30,7 +30,9 @@ export class LoginUser {
       throw new CredentialsInvalidError()
     }
 
-    const token = jwt.sign(user.id, env.JWT_SECRET)
+    const token = jwt.sign({id: user.id}, env.JWT_SECRET, {
+      expiresIn: '6h'
+    })
     return { token }
   }
 }

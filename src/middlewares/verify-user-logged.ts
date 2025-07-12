@@ -12,7 +12,8 @@ export async function verifyUserLogged(
     req.userId = undefined
     if (headers) {
       const [_, token] = headers.split(' ')
-      req.userId = jwt.verify(token, env.JWT_SECRET) as string
+      const payload = jwt.verify(token, env.JWT_SECRET) as {id: string, iat: number, exp: number}
+      req.userId = payload.id
     }
   } catch (e) {
     console.error(e)
