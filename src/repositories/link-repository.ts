@@ -9,7 +9,7 @@ export interface LinkRepository {
   create(data: Prisma.LinksUncheckedCreateInput): Promise<Links>
   findBySlug(slug: string): Promise<Links | null>
   findById(id: string): Promise<Links | null>
-  findByUser(userId: string): Promise<findByUserReturn[]>
+  findByUser(userId: string, orderByCreatedAt: 'asc' | 'desc'): Promise<findByUserReturn[]>
   deleteById(id: string): Promise<Links>
   linkIsPrivate(slug: string): Promise<boolean>
 }

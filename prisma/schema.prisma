@@ -24,6 +24,7 @@ model Links {
   user       Users?    @relation(fields: [user_id], references: [id])
   user_id    String?
   Clicks     Clicks[]
+  created_at DateTime  @default(now())
 
   @@map("links")
 }
@@ -49,6 +50,7 @@ model Clicks {
   location       String?
   link           Links    @relation(fields: [link_id], references: [id], onUpdate: Cascade, onDelete: Cascade)
   link_id        String
+  created_at     DateTime @default(now())
 
   @@map("clicks_in_link")
 }

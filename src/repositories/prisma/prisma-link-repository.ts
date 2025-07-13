@@ -27,11 +27,12 @@ export class PrismaLinkRepository implements LinkRepository {
     return linkDeletado
   }
 
-  async findByUser(userId: string): Promise<({ _count: { user: number; Clicks: number } } & { id: string; url: string; customSlug: string | null; expireAt: Date | null })[]> {
+  async findByUser(userId: string, orderByCreatedAt: 'asc' | 'desc'): Promise<({ _count: { user: number; Clicks: number } } & { id: string; url: string; customSlug: string | null; created_at: Date; expireAt: Date | null })[]> {
     const links = await prisma.links.findMany({
       where: { user_id: userId },
       omit: { private: true, user_id: true, password: true },
       include: { _count: true },
+      orderBy: {created_at: orderByCreatedAt}
     })
     return links
   }
